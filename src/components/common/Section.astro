@@ -1,0 +1,32 @@
+---
+// Section component - Generic container with consistent styling
+import Heading from '../biolink/Heading.astro';
+
+interface Props {
+  title?: string;
+  variant?: 'container' | 'card' | 'plain';
+  className?: string;
+}
+
+const { title, variant = 'container', className = '' } = Astro.props;
+
+// Variant classes - using CSS variables for theming
+const variantClasses = {
+  container: 'neo-container p-4',
+  card: 'neo-card p-4', 
+  plain: 'p-4'
+};
+
+const variantStyles = {
+  container: 'background-color: var(--aw-section-background); color: var(--aw-body-text-color);',
+  card: 'background-color: var(--aw-section-background); color: var(--aw-body-text-color);',
+  plain: ''
+};
+
+const classes = `w-full ${variantClasses[variant]} ${className}`;
+---
+
+<div class={classes} style={variantStyles[variant]}>
+  {title && <Heading text={title} />}
+  <slot />
+</div>

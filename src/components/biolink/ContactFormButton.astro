@@ -1,0 +1,27 @@
+---
+// Contact Form Button component - Now uses BaseButton for DRY principles
+import BaseButton from '../common/BaseButton.astro';
+
+interface Props {
+  title?: string;
+  icon?: string;
+  modal?: string;
+  buttonClass?: string;
+}
+
+const { 
+  title = "Contact Me", 
+  icon = "tabler:mail",
+  modal = "contact",
+  buttonClass = "" 
+} = Astro.props;
+---
+
+<BaseButton 
+  title={title}
+  icon={icon}
+  modal={modal}
+  type="modal"
+  size="lg"
+  buttonClass={buttonClass}
+/> 

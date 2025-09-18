@@ -1,0 +1,152 @@
+{
+  "profile": {
+    "name": "Your Name",
+    "title": "Your Title",
+    "subtitle": "Your Professional Subtitle - Edit this in biolink.json",
+    "description": "Your personal description goes here. Customize this message in the biolink.json file.",
+    "avatar": "/profile-placeholder.jpg",
+    "backgroundColor": "#f8e1dc"
+  },
+  "socialLinks": [
+    {
+      "platform": "email",
+      "url": "mailto:your.email@example.com",
+      "icon": "tabler:mail"
+    },
+    {
+      "platform": "linkedin",
+      "url": "https://www.linkedin.com/in/your-username/",
+      "icon": "tabler:brand-linkedin"
+    },
+    {
+      "platform": "github",
+      "url": "https://github.com/your-username",
+      "icon": "tabler:brand-github"
+    },
+    {
+      "platform": "instagram",
+      "url": "https://www.instagram.com/your-username/",
+      "icon": "tabler:brand-instagram"
+    }
+  ],
+  "profileLinks": [
+    {
+      "title": "Contact Me",
+      "url": "#",
+      "icon": "tabler:mail",
+      "modal": "contact"
+    },
+    {
+      "title": "My Resume/CV",
+      "url": "/resume-placeholder.pdf",
+      "icon": "tabler:link"
+    },
+    {
+      "title": "My Website",
+      "url": "https://your-website.com",
+      "icon": "tabler:world"
+    }
+  ],
+  "projectLinks": [
+    {
+      "title": "E-Commerce Platform",
+      "url": "https://example-ecommerce.com",
+      "icon": "tabler:shopping-cart",
+      "thumbnail": "/project-thumbnails/ecommerce-placeholder.png",
+      "imagePlaceholder": true,
+      "description": "Modern e-commerce platform built with React and Node.js, featuring secure payments, inventory management, and analytics dashboard.",
+      "technologies": ["React", "Node.js", "MongoDB", "Stripe"],
+      "type": "Web Application",
+      "published": true
+    },
+    {
+      "title": "Task Management App",
+      "url": "https://github.com/username/task-manager",
+      "icon": "tabler:checklist",
+      "thumbnail": "/project-thumbnails/taskapp-placeholder.png",
+      "imagePlaceholder": true,
+      "description": "Collaborative task management application with real-time updates, team collaboration, and project tracking capabilities.",
+      "technologies": ["Vue.js", "Firebase", "TypeScript", "PWA"],
+      "type": "Mobile App",
+      "published": true
+    },
+    {
+      "title": "Weather Dashboard",
+      "url": "https://example-weather.netlify.app",
+      "icon": "tabler:cloud",
+      "thumbnail": "/project-thumbnails/weather-placeholder.png",
+      "imagePlaceholder": true,
+      "description": "Beautiful weather dashboard with forecasts, interactive maps, and location-based weather alerts using modern APIs.",
+      "technologies": ["JavaScript", "Weather API", "Chart.js", "CSS Grid"],
+      "type": "Web Dashboard",
+      "published": true
+    },
+    {
+      "title": "Portfolio Website",
+      "url": "https://github.com/username/portfolio-template",
+      "icon": "tabler:briefcase",
+      "thumbnail": "/project-thumbnails/portfolio-placeholder.png",
+      "imagePlaceholder": true,
+      "description": "Responsive portfolio website template with dark mode, contact forms, and optimized performance for developers and designers.",
+      "technologies": ["Astro", "Tailwind CSS", "TypeScript", "Netlify"],
+      "type": "Website Template",
+      "published": true
+    },
+    {
+      "title": "Data Visualization Tool",
+      "url": "https://example-dataviz.com",
+      "icon": "tabler:chart-dots",
+      "thumbnail": "/project-thumbnails/dataviz-placeholder.png",
+      "imagePlaceholder": true,
+      "description": "Interactive data visualization tool for creating charts, graphs, and dashboards from CSV and JSON data sources.",
+      "technologies": ["D3.js", "Python", "Flask", "PostgreSQL"],
+      "type": "Data Tool",
+      "published": true
+    },
+    {
+      "title": "Open Source Library",
+      "url": "https://github.com/username/awesome-library",
+      "icon": "tabler:code",
+      "thumbnail": "/project-thumbnails/library-placeholder.png",
+      "imagePlaceholder": true,
+      "description": "Lightweight JavaScript utility library for common development tasks, with zero dependencies and TypeScript support.",
+      "technologies": ["JavaScript", "TypeScript", "Jest", "NPM"],
+      "type": "Library",
+      "published": true
+    }
+  ],
+  "freelanceBrand": {
+    "headline": "My Business/Brand",
+    "logo": "/images/brand-logo-placeholder.png",
+    "companyName": "Your Company Name",
+    "description": "Your business or freelance brand description goes here. Describe your services and what makes you unique.",
+    "linkButton": {
+      "title": "Learn More",
+      "url": "https://your-business-website.com",
+      "icon": "tabler:external-link"
+    }
+  },
+  "siteTemplate": {
+    "headline": "Get Your Own Landing Page",
+    "logo": "/github-template-icon.png",
+    "templateName": "Biolink Template",
+    "description": "Open source biolink template. Perfect for developers, creators, and professionals. Free to use and customize.",
+    "linkButton": {
+      "title": "Get Template",
+      "url": "https://github.com/your-username/biolink-template",
+      "icon": "tabler:brand-github"
+    }
+  },
+  "supportLinks": [
+    {
+      "title": "Buy Me A Coffee",
+      "url": "https://buymeacoffee.com/your-username",
+      "icon": "tabler:coffee"
+    },
+    {
+      "title": "Support My Work",
+      "url": "https://www.patreon.com/your-username",
+      "icon": "tabler:brand-patreon"
+    }
+  ]
+} 

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(del:*)",
+      "Bash(rm:*)",
+      "Bash(npm run check:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout 10 npm run dev)",
+      "Bash(pnpm build:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(uv:*)",
+      "Bash(npm run dev:*)",
+      "Bash(pnpm run:*)"
+    ],
+    "deny": []
+  }
+}

@@ -1,0 +1,21 @@
+---
+// LinksList component to display all link buttons
+import LinkButton from './LinkButton.astro';
+
+interface Link {
+  title: string;
+  url: string;
+  icon?: string;
+  modal?: string; // Add modal property to support modal links
+}
+
+interface Props {
+  links: Link[];
+}
+
+const { links } = Astro.props;
+---
+
+<div class="w-full max-w-md mx-auto neo-grid">
+  {links.map(link => <LinkButton {...link} />)}
+</div> 
