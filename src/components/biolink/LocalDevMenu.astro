@@ -1,0 +1,144 @@
+---
+// LocalDevMenu component - Development-only floating menu for quick access to dev tools
+import { Icon } from 'astro-icon/components';
+---
+
+{import.meta.env.DEV && (
+  <div id="local-dev-menu" class="fixed bottom-4 left-4 z-50">
+    <!-- Main Menu Button -->
+    <button
+      id="dev-menu-toggle"
+      class="neo-button rounded-full w-14 h-14 flex items-center justify-center transition-all duration-300 hover:scale-105"
+      style="background-color: var(--biolink-primary-button-background); color: var(--biolink-primary-button-text);"
+      aria-label="Toggle developer menu"
+    >
+      <Icon name="tabler:menu-2" class="w-6 h-6" />
+    </button>
+
+    <!-- Expanded Menu -->
+    <div
+      id="dev-menu-items"
+      class="absolute bottom-16 left-0 opacity-0 scale-95 pointer-events-none transition-all duration-300 ease-out"
+    >
+      <div class="flex flex-col gap-2">
+        <!-- QR Code Page Link -->
+        <a
+          href="/qr-code"
+          class="neo-button rounded-lg px-4 py-3 flex items-center gap-3 whitespace-nowrap transition-all duration-200 hover:scale-105"
+          style="background-color: var(--biolink-section-background); color: var(--biolink-body-text-color);"
+          title="View QR Code"
+        >
+          <Icon name="tabler:qrcode" class="w-5 h-5" />
+          <span class="font-heading font-semibold text-sm">QR Code</span>
+        </a>
+
+        <!-- Placeholder for future menu items -->
+        <!--
+        <a
+          href="/dev-tools"
+          class="neo-button rounded-lg px-4 py-3 flex items-center gap-3 whitespace-nowrap transition-all duration-200 hover:scale-105"
+          style="background-color: var(--biolink-section-background); color: var(--biolink-body-text-color);"
+          title="Developer Tools"
+        >
+          <Icon name="tabler:tool" class="w-5 h-5" />
+          <span class="font-heading font-semibold text-sm">Dev Tools</span>
+        </a>
+        -->
+      </div>
+    </div>
+  </div>
+)}
+
+<script>
+  // Only run script if in development mode
+  if (import.meta.env.DEV) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleButton = document.getElementById('dev-menu-toggle');
+      const menuItems = document.getElementById('dev-menu-items');
+      const menuIcon = toggleButton?.querySelector('[astro-icon]');
+      let isExpanded = false;
+
+      function toggleMenu() {
+        isExpanded = !isExpanded;
+
+        if (isExpanded) {
+          // Show menu
+          menuItems?.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+          menuItems?.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+
+          // Rotate icon
+          menuIcon?.classList.add('rotate-45');
+
+          // Update button aria state
+          toggleButton?.setAttribute('aria-expanded', 'true');
+        } else {
+          // Hide menu
+          menuItems?.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+          menuItems?.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+
+          // Reset icon rotation
+          menuIcon?.classList.remove('rotate-45');
+
+          // Update button aria state
+          toggleButton?.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      // Click to toggle menu
+      toggleButton?.addEventListener('click', toggleMenu);
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (event) => {
+        const menu = document.getElementById('local-dev-menu');
+        if (menu && !menu.contains(event.target as Node) && isExpanded) {
+          toggleMenu();
+        }
+      });
+
+      // Close menu on escape key
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && isExpanded) {
+          toggleMenu();
+        }
+      });
+    });
+  }
+</script>
+
+<style>
+  /* Enhanced neo-brutalist styling for dev menu */
+  #local-dev-menu button:hover {
+    transform: translateY(-2px) translateX(-2px);
+    box-shadow: 6px 6px 0px 0px var(--biolink-shadow-color);
+  }
+
+  #local-dev-menu button:active {
+    transform: translateY(2px) translateX(2px);
+    box-shadow: 2px 2px 0px 0px var(--biolink-shadow-color);
+  }
+
+  #local-dev-menu a:hover {
+    background-color: var(--biolink-link-button-hover-background) !important;
+    transform: translateY(-1px) translateX(-1px) scale(1.05);
+    box-shadow: 3px 3px 0px 0px var(--biolink-shadow-color);
+  }
+
+  #local-dev-menu a:active {
+    transform: translateY(1px) translateX(1px) scale(1.05);
+    box-shadow: 1px 1px 0px 0px var(--biolink-shadow-color);
+  }
+
+  /* Smooth icon rotation */
+  #dev-menu-toggle [astro-icon] {
+    transition: transform 0.3s ease;
+  }
+
+  #dev-menu-toggle [astro-icon].rotate-45 {
+    transform: rotate(45deg);
+  }
+
+  /* Ensure menu items have proper stacking context */
+  #dev-menu-items {
+    z-index: 51;
+  }
+</style>

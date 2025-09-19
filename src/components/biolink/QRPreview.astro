@@ -1,0 +1,226 @@
+---
+// QRPreview component - Canvas-based QR code display with copy/download actions
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  canvasWidth?: number;
+  canvasHeight?: number;
+  currentUrl?: string;
+  isLoading?: boolean;
+  error?: string;
+  onCopy?: () => void;
+  onDownload?: () => void;
+}
+
+const {
+  canvasWidth = 300,
+  canvasHeight = 300,
+  currentUrl = '',
+  isLoading = false,
+  error = '',
+  onCopy,
+  onDownload
+} = Astro.props;
+
+// Determine if buttons should be disabled
+const isQRReady = !isLoading && !error && currentUrl;
+---
+
+<div class="qr-preview-container neo-container p-6 space-y-4">
+  <!-- Header Section -->
+  <div class="text-center">
+    <h3 class="font-heading text-xl font-bold mb-2" style="color: var(--biolink-heading-color);">
+      QR Code Preview
+    </h3>
+    {currentUrl && (
+      <p class="text-sm font-mono break-all px-3 py-2 rounded-lg neo-border"
+         style="background-color: var(--biolink-card-background); color: var(--biolink-muted-text-color);">
+        {currentUrl}
+      </p>
+    )}
+  </div>
+
+  <!-- Canvas Container -->
+  <div class="canvas-container flex justify-center">
+    <div class="canvas-wrapper relative">
+      <canvas
+        id="qr-canvas"
+        width={canvasWidth}
+        height={canvasHeight}
+        class="qr-canvas neo-border rounded-lg max-w-full h-auto"
+        style="background-color: var(--biolink-card-background);"
+      >
+        Your browser does not support HTML5 canvas.
+      </canvas>
+
+      <!-- Loading Overlay -->
+      {isLoading && (
+        <div class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 rounded-lg">
+          <div class="text-center space-y-2">
+            <div class="animate-spin w-8 h-8 mx-auto">
+              <Icon name="tabler:loader-2" class="w-8 h-8" style="color: var(--biolink-primary-button-background);" />
+            </div>
+            <p class="text-sm font-medium" style="color: var(--biolink-body-text-color);">
+              Generating QR Code...
+            </p>
+          </div>
+        </div>
+      )}
+
+      <!-- Error Overlay -->
+      {error && (
+        <div class="absolute inset-0 flex items-center justify-center bg-red-50 bg-opacity-90 rounded-lg border-2 border-red-200">
+          <div class="text-center space-y-2 p-4">
+            <Icon name="tabler:alert-circle" class="w-8 h-8 mx-auto text-red-500" />
+            <p class="text-sm font-medium text-red-700">
+              {error}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <!-- Placeholder Content -->
+      {!isLoading && !error && !currentUrl && (
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="text-center space-y-2 p-4">
+            <Icon name="tabler:qrcode" class="w-12 h-12 mx-auto" style="color: var(--biolink-muted-text-color);" />
+            <p class="text-sm font-medium" style="color: var(--biolink-muted-text-color);">
+              QR Code will appear here
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <!-- Copy to Clipboard Button -->
+    <button
+      id="copy-qr-button"
+      type="button"
+      disabled={!isQRReady}
+      class="copy-button neo-button rounded-lg py-3 px-4 font-heading font-medium flex items-center justify-center gap-2 transition-all duration-200"
+      class:list={{
+        'opacity-50 cursor-not-allowed': !isQRReady,
+        'hover:scale-[0.98]': isQRReady
+      }}
+      style={isQRReady
+        ? "background-color: var(--biolink-secondary-button-background); color: var(--biolink-secondary-button-text);"
+        : "background-color: var(--biolink-card-background); color: var(--biolink-muted-text-color); border-color: var(--biolink-muted-text-color);"
+      }
+    >
+      <Icon name="tabler:copy" class="w-5 h-5" />
+      <span>Copy to Clipboard</span>
+    </button>
+
+    <!-- Download Image Button -->
+    <button
+      id="download-qr-button"
+      type="button"
+      disabled={!isQRReady}
+      class="download-button neo-button rounded-lg py-3 px-4 font-heading font-medium flex items-center justify-center gap-2 transition-all duration-200"
+      class:list={{
+        'opacity-50 cursor-not-allowed': !isQRReady,
+        'hover:scale-[0.98]': isQRReady
+      }}
+      style={isQRReady
+        ? "background-color: var(--biolink-primary-button-background); color: var(--biolink-primary-button-text);"
+        : "background-color: var(--biolink-card-background); color: var(--biolink-muted-text-color); border-color: var(--biolink-muted-text-color);"
+      }
+    >
+      <Icon name="tabler:download" class="w-5 h-5" />
+      <span>Download Image</span>
+    </button>
+  </div>
+
+  <!-- Status Messages -->
+  <div id="qr-status-messages" class="status-messages text-center space-y-2">
+    <!-- Success message for copy operation -->
+    <div
+      id="copy-success-message"
+      class="success-message hidden p-2 rounded-lg neo-border"
+      style="background-color: var(--biolink-card-background); color: var(--biolink-body-text-color);"
+    >
+      <div class="flex items-center justify-center gap-2">
+        <Icon name="tabler:check" class="w-4 h-4 text-green-500" />
+        <span class="text-sm font-medium">QR code copied to clipboard!</span>
+      </div>
+    </div>
+
+    <!-- Success message for download operation -->
+    <div
+      id="download-success-message"
+      class="success-message hidden p-2 rounded-lg neo-border"
+      style="background-color: var(--biolink-card-background); color: var(--biolink-body-text-color);"
+    >
+      <div class="flex items-center justify-center gap-2">
+        <Icon name="tabler:check" class="w-4 h-4 text-green-500" />
+        <span class="text-sm font-medium">QR code downloaded successfully!</span>
+      </div>
+    </div>
+
+    <!-- Error message for operations -->
+    <div
+      id="operation-error-message"
+      class="error-message hidden p-2 rounded-lg neo-border"
+      style="background-color: #fef2f2; color: #dc2626; border-color: #fecaca;"
+    >
+      <div class="flex items-center justify-center gap-2">
+        <Icon name="tabler:alert-circle" class="w-4 h-4" />
+        <span id="operation-error-text" class="text-sm font-medium">An error occurred</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .qr-canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .action-buttons button:disabled {
+    pointer-events: none;
+  }
+
+  .action-buttons button:not(:disabled):hover {
+    transform: translateY(-1px) translateX(-1px);
+    box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+  }
+
+  .action-buttons button:not(:disabled):active {
+    transform: translateY(1px) translateX(1px);
+    box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
+  }
+
+  .success-message,
+  .error-message {
+    animation: fadeInOut 3s ease-in-out;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .qr-canvas {
+      max-width: 250px;
+      max-height: 250px;
+    }
+
+    .action-buttons {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

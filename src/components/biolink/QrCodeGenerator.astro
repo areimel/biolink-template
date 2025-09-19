@@ -1,0 +1,222 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  canvasWidth?: number;
+  canvasHeight?: number;
+}
+
+const { canvasWidth = 300, canvasHeight = 300 } = Astro.props;
+---
+
+<div class="qr-generator space-y-4">
+  <!-- Canvas Container -->
+  <div class="canvas-container flex justify-center">
+    <canvas
+      id="qr-canvas"
+      width={canvasWidth}
+      height={canvasHeight}
+      class="neo-border rounded-lg max-w-full h-auto"
+      style="background-color: var(--biolink-card-background);"
+    >
+      Your browser does not support HTML5 canvas.
+    </canvas>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <button
+      id="copy-qr-btn"
+      type="button"
+      class="neo-button rounded-lg py-3 px-4 font-heading font-medium flex items-center justify-center gap-2"
+      style="background-color: var(--biolink-secondary-button-background); color: var(--biolink-secondary-button-text);"
+    >
+      <Icon name="tabler:copy" class="w-5 h-5" />
+      <span>Copy to Clipboard</span>
+    </button>
+
+    <button
+      id="download-qr-btn"
+      type="button"
+      class="neo-button rounded-lg py-3 px-4 font-heading font-medium flex items-center justify-center gap-2"
+      style="background-color: var(--biolink-primary-button-background); color: var(--biolink-primary-button-text);"
+    >
+      <Icon name="tabler:download" class="w-5 h-5" />
+      <span>Download Image</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Import QRCode using dynamic import for client-side usage
+  let QRCode: any;
+
+  const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+  const copyBtn = document.getElementById('copy-qr-btn') as HTMLButtonElement;
+  const downloadBtn = document.getElementById('download-qr-btn') as HTMLButtonElement;
+
+  console.log('🎯 QrCodeGenerator: Script loaded');
+  console.log('🎨 Canvas element:', canvas);
+  console.log('📋 Copy button:', copyBtn);
+  console.log('💾 Download button:', downloadBtn);
+
+  // Load QRCode library
+  async function loadQRCode() {
+    try {
+      console.log('📦 QrCodeGenerator: Loading QRCode library...');
+      QRCode = (await import('qrcode')).default;
+      console.log('✅ QrCodeGenerator: QRCode library loaded successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ QrCodeGenerator: Failed to load QRCode library:', error);
+      return false;
+    }
+  }
+
+  async function generateQRCode(url: string, size: number) {
+    console.log('🔄 QrCodeGenerator: generateQRCode called');
+    console.log('📝 URL:', url);
+    console.log('📏 Size:', size);
+    console.log('🎨 Canvas:', canvas);
+
+    if (!canvas) {
+      console.error('❌ QrCodeGenerator: Canvas element not found');
+      return;
+    }
+
+    if (!url) {
+      console.error('❌ QrCodeGenerator: No URL provided');
+      return;
+    }
+
+    if (!QRCode) {
+      console.log('📦 QrCodeGenerator: QRCode library not loaded, loading now...');
+      const loaded = await loadQRCode();
+      if (!loaded) {
+        console.error('❌ QrCodeGenerator: Failed to load QRCode library');
+        return;
+      }
+    }
+
+    try {
+      console.log('🎨 QrCodeGenerator: Setting canvas dimensions...');
+      canvas.width = size;
+      canvas.height = size;
+
+      console.log('🎯 QrCodeGenerator: Generating QR code...');
+      await QRCode.toCanvas(canvas, url, {
+        width: size,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        }
+      });
+      console.log('✅ QrCodeGenerator: QR code generated successfully');
+    } catch (error) {
+      console.error('❌ QrCodeGenerator: Error generating QR code:', error);
+    }
+  }
+
+  function copyToClipboard() {
+    console.log('📋 QrCodeGenerator: Copy to clipboard clicked');
+    if (!canvas) {
+      console.error('❌ QrCodeGenerator: Canvas not found for copying');
+      return;
+    }
+
+    canvas.toBlob(async (blob) => {
+      if (blob) {
+        try {
+          const item = new ClipboardItem({ 'image/png': blob });
+          await navigator.clipboard.write([item]);
+          console.log('✅ QrCodeGenerator: QR code copied to clipboard');
+        } catch (error) {
+          console.error('❌ QrCodeGenerator: Failed to copy to clipboard:', error);
+        }
+      }
+    }, 'image/png');
+  }
+
+  function downloadImage() {
+    console.log('💾 QrCodeGenerator: Download image clicked');
+    if (!canvas) {
+      console.error('❌ QrCodeGenerator: Canvas not found for download');
+      return;
+    }
+
+    try {
+      const link = document.createElement('a');
+      link.download = `qr-code-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      console.log('✅ QrCodeGenerator: QR code download initiated');
+    } catch (error) {
+      console.error('❌ QrCodeGenerator: Failed to download image:', error);
+    }
+  }
+
+  // Listen for QR generation events
+  document.addEventListener('qr-generate', (event: any) => {
+    console.log('🎧 QrCodeGenerator: Received qr-generate event');
+    console.log('📦 Event detail:', event.detail);
+    const { url, size } = event.detail;
+    generateQRCode(url, size);
+  });
+
+  copyBtn?.addEventListener('click', copyToClipboard);
+  downloadBtn?.addEventListener('click', downloadImage);
+
+  // Initialize QR code generator
+  async function initialize() {
+    console.log('🚀 QrCodeGenerator: Initializing...');
+    await loadQRCode();
+
+    // Auto-generate QR code if URL input has a value
+    setTimeout(() => {
+      const urlInput = document.getElementById('qr-url') as HTMLInputElement;
+      const sizeSelect = document.getElementById('qr-size') as HTMLSelectElement;
+
+      if (urlInput && urlInput.value.trim()) {
+        console.log('🔄 QrCodeGenerator: Auto-generating QR code on page load');
+        const url = urlInput.value.trim();
+        const size = sizeSelect ? parseInt(sizeSelect.value) : 512;
+        generateQRCode(url, size);
+      } else {
+        console.log('ℹ️ QrCodeGenerator: No default URL found, waiting for user input');
+      }
+    }, 100); // Small delay to ensure all components are loaded
+  }
+
+  // Load QRCode library when script loads
+  initialize();
+</script>
+
+<style>
+  .qr-canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .action-buttons button:hover {
+    transform: translateY(-1px) translateX(-1px);
+    box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+  }
+
+  .action-buttons button:active {
+    transform: translateY(1px) translateX(1px);
+    box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
+  }
+
+  @media (max-width: 640px) {
+    .qr-canvas {
+      max-width: 250px;
+      max-height: 250px;
+    }
+
+    .action-buttons {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,96 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import LocalDevMenu from '~/components/biolink/LocalDevMenu.astro';
+import QrCodeGeneratorControls from '~/components/biolink/QrCodeGeneratorControls.astro';
+import QrCodeGenerator from '~/components/biolink/QrCodeGenerator.astro';
+
+// Import data from JSON file
+import bioLinkData from '../data/biolink.json';
+
+const metadata = {
+  title: 'QR Code Generator',
+  description: 'Generate QR codes for your biolink profile and share them easily across platforms.',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="w-full flex flex-col items-center pb-8 bg-theme-primary">
+    <!-- Mobile: vertical stack, Desktop: bento grid -->
+    <div class="w-full max-w-lg lg:max-w-6xl mx-auto p-4">
+
+      <!-- Mobile layout: vertical stack -->
+      <div id="mobile-version" class="lg:hidden space-y-8">
+        <!-- Page Header -->
+        <div class="flex flex-col items-center text-center px-4 pb-6 pt-6 neo-container">
+          <h1 class="text-3xl font-bold font-heading leading-relaxed mb-2" style="color: var(--biolink-body-text-color)">
+            QR Code Generator
+          </h1>
+          <p class="text-sm font-mono font-semibold tracking-tight max-w-sm mx-auto" style="color: var(--biolink-muted-text-color); text-wrap: balance;">
+            Generate and customize QR codes for your biolink profile
+          </p>
+        </div>
+
+        <!-- QR Controls Section - Mobile -->
+        <div class="neo-container p-6">
+          <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
+            QR Code Settings
+          </h2>
+          <QrCodeGeneratorControls defaultUrl={bioLinkData.liveUrl} />
+        </div>
+
+        <!-- QR Preview Section - Mobile -->
+        <div class="neo-container p-6">
+          <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
+            QR Code Preview
+          </h2>
+          <QrCodeGenerator />
+        </div>
+      </div>
+
+      <!-- Desktop layout: bento grid -->
+      <div id="desktop-version" class="hidden lg:grid lg:grid-cols-3 lg:gap-6">
+        <!-- Page Header - Full Width -->
+        <div class="lg:col-span-3 mb-6">
+          <div class="flex flex-col items-center text-center px-4 pb-6 pt-6 neo-container">
+            <h1 class="text-4xl font-bold font-heading leading-relaxed mb-2" style="color: var(--biolink-body-text-color)">
+              QR Code Generator
+            </h1>
+            <p class="text-base font-mono font-semibold tracking-tight max-w-md mx-auto" style="color: var(--biolink-muted-text-color); text-wrap: balance;">
+              Generate and customize QR codes for your biolink profile
+            </p>
+          </div>
+        </div>
+
+        <!-- Left section - QR Controls (1 column) -->
+        <div class="lg:col-span-1">
+          <div class="neo-container p-6">
+            <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
+              QR Code Settings
+            </h2>
+            <QrCodeGeneratorControls defaultUrl={bioLinkData.liveUrl} />
+          </div>
+        </div>
+
+        <!-- Right section - QR Preview (2 columns) -->
+        <div class="lg:col-span-2">
+          <div class="neo-container p-6">
+            <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
+              QR Code Preview
+            </h2>
+            <QrCodeGenerator canvasWidth={400} canvasHeight={400} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer with subtle VHS-inspired design -->
+  <div class="w-full text-center py-4 text-sm text-theme-text border-t border-theme-text">
+    <p>Anti-Copyright {new Date().getFullYear()} - No Rights Reserved</p>
+    <p>Open Source & Free To Use - Download your own copy and customize it for yourself.</p>
+  </div>
+
+  <!-- Development-only floating menu -->
+  <LocalDevMenu />
+</Layout>
