@@ -9,7 +9,6 @@ const { defaultUrl = "" } = Astro.props;
 ---
 
 <div class="qr-controls space-y-4 w-full">
-  <!-- URL Input -->
   <div class="form-group">
     <label for="qr-url" class="block mb-2 font-heading text-md font-bold" style="color: var(--biolink-body-text-color)">
       URL to encode
@@ -19,13 +18,11 @@ const { defaultUrl = "" } = Astro.props;
       id="qr-url"
       value={defaultUrl}
       placeholder="https://your-website.com"
-      required
       class="w-full px-4 py-3 neo-border rounded-lg bg-white focus:outline-none font-courier-prime"
       style="color: var(--biolink-input-text); border-color: var(--biolink-input-border);"
     />
   </div>
 
-  <!-- Size Selector -->
   <div class="form-group">
     <label for="qr-size" class="block mb-2 font-heading text-md font-bold" style="color: var(--biolink-body-text-color)">
       QR Code Size
@@ -41,7 +38,6 @@ const { defaultUrl = "" } = Astro.props;
     </select>
   </div>
 
-  <!-- Generate Button -->
   <div class="form-group">
     <button
       type="button"
@@ -60,25 +56,14 @@ const { defaultUrl = "" } = Astro.props;
   const sizeSelect = document.getElementById('qr-size') as HTMLSelectElement;
   const generateBtn = document.getElementById('qr-generate-btn') as HTMLButtonElement;
 
-  function emitGenerateEvent() {
+  generateBtn?.addEventListener('click', () => {
     const url = urlInput.value.trim();
     const size = parseInt(sizeSelect.value);
 
-    console.log('🔄 QrCodeGeneratorControls: Generate button clicked');
-    console.log('📝 URL:', url);
-    console.log('📏 Size:', size);
-
     if (url) {
-      console.log('✅ QrCodeGeneratorControls: Dispatching qr-generate event on document');
       document.dispatchEvent(new CustomEvent('qr-generate', {
-        detail: { url, size },
-        bubbles: true
+        detail: { url, size }
       }));
-      console.log('📡 QrCodeGeneratorControls: Event dispatched successfully');
-    } else {
-      console.log('❌ QrCodeGeneratorControls: No URL provided, skipping event dispatch');
     }
-  }
-
-  generateBtn?.addEventListener('click', emitGenerateEvent);
+  });
 </script>

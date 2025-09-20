@@ -1,8 +1,8 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import LocalDevMenu from '~/components/biolink/LocalDevMenu.astro';
-import QrCodeGeneratorControls from '~/components/biolink/QrCodeGeneratorControls.astro';
-import QrCodeGenerator from '~/components/biolink/QrCodeGenerator.astro';
+import QrCodeControls from '~/components/qrcodes/QrCodeControls.astro';
+import QrCodeDisplay from '~/components/qrcodes/QrCodeDisplay.astro';
 
 // Import data from JSON file
 import bioLinkData from '../data/biolink.json';
@@ -36,7 +36,7 @@ const metadata = {
           <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
             QR Code Settings
           </h2>
-          <QrCodeGeneratorControls defaultUrl={bioLinkData.liveUrl} />
+          <QrCodeControls defaultUrl={bioLinkData.liveUrl} />
         </div>
 
         <!-- QR Preview Section - Mobile -->
@@ -44,7 +44,7 @@ const metadata = {
           <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
             QR Code Preview
           </h2>
-          <QrCodeGenerator />
+          <QrCodeDisplay />
         </div>
       </div>
 
@@ -68,7 +68,7 @@ const metadata = {
             <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
               QR Code Settings
             </h2>
-            <QrCodeGeneratorControls defaultUrl={bioLinkData.liveUrl} />
+            <QrCodeControls defaultUrl={bioLinkData.liveUrl} />
           </div>
         </div>
 
@@ -78,7 +78,7 @@ const metadata = {
             <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
               QR Code Preview
             </h2>
-            <QrCodeGenerator canvasWidth={400} canvasHeight={400} />
+            <QrCodeDisplay canvasWidth={400} canvasHeight={400} />
           </div>
         </div>
       </div>

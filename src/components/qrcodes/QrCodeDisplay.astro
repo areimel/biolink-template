@@ -1,0 +1,90 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  canvasWidth?: number;
+  canvasHeight?: number;
+}
+
+const { canvasWidth = 300, canvasHeight = 300 } = Astro.props;
+---
+
+<div class="qr-display space-y-4">
+  <div class="canvas-container flex justify-center">
+    <canvas
+      id="qr-canvas"
+      width={canvasWidth}
+      height={canvasHeight}
+      class="neo-border rounded-lg max-w-full h-auto"
+      style="background-color: var(--biolink-card-background);"
+    >
+      Your browser does not support HTML5 canvas.
+    </canvas>
+  </div>
+
+  <div class="action-buttons grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <button
+      id="copy-qr-btn"
+      type="button"
+      class="neo-button rounded-lg py-3 px-4 font-heading font-medium flex items-center justify-center gap-2"
+      style="background-color: var(--biolink-secondary-button-background); color: var(--biolink-secondary-button-text);"
+    >
+      <Icon name="tabler:copy" class="w-5 h-5" />
+      <span>Copy to Clipboard</span>
+    </button>
+
+    <button
+      id="download-qr-btn"
+      type="button"
+      class="neo-button rounded-lg py-3 px-4 font-heading font-medium flex items-center justify-center gap-2"
+      style="background-color: var(--biolink-primary-button-background); color: var(--biolink-primary-button-text);"
+    >
+      <Icon name="tabler:download" class="w-5 h-5" />
+      <span>Download Image</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  import { generateQRCode, copyQRCode, downloadQRCode } from '~/utils/qrcode';
+
+  const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+  const copyBtn = document.getElementById('copy-qr-btn') as HTMLButtonElement;
+  const downloadBtn = document.getElementById('download-qr-btn') as HTMLButtonElement;
+
+  document.addEventListener('qr-generate', async (event: CustomEvent) => {
+    const { url, size } = event.detail;
+    await generateQRCode(canvas, url, size);
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    await copyQRCode(canvas);
+  });
+
+  downloadBtn?.addEventListener('click', () => {
+    downloadQRCode(canvas);
+  });
+</script>
+
+<style>
+  .action-buttons button:hover {
+    transform: translateY(-1px) translateX(-1px);
+    box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+  }
+
+  .action-buttons button:active {
+    transform: translateY(1px) translateX(1px);
+    box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
+  }
+
+  @media (max-width: 640px) {
+    #qr-canvas {
+      max-width: 250px;
+      max-height: 250px;
+    }
+
+    .action-buttons {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
