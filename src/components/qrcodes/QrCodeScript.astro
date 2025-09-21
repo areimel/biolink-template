@@ -1,0 +1,334 @@
+---
+// QrCodeScript.astro - Centralized QR code JavaScript functionality
+// This component provides all QR code generation, copy, and download functionality
+// with comprehensive debugging and auto-generation support
+---
+
+<script>
+console.log('🚀 QrCodeScript: Component loaded');
+
+// Global QR code functionality
+let QRCode: any = null;
+let isQRCodeLibraryLoaded = false;
+
+// Load QRCode library dynamically
+async function loadQRCodeLibrary() {
+  if (isQRCodeLibraryLoaded && QRCode) {
+    console.log('✅ QrCodeScript: QRCode library already loaded');
+    return true;
+  }
+
+  try {
+    console.log('📦 QrCodeScript: Loading QRCode library...');
+    const qrModule = await import('qrcode');
+    QRCode = qrModule.default;
+    isQRCodeLibraryLoaded = true;
+    console.log('✅ QrCodeScript: QRCode library loaded successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ QrCodeScript: Failed to load QRCode library:', error);
+    return false;
+  }
+}
+
+// Verify canvas is ready for rendering
+function verifyCanvasReadiness(canvas: HTMLCanvasElement): boolean {
+  console.log('🔍 QrCodeScript: Verifying canvas readiness...');
+
+  if (!canvas) {
+    console.error('❌ QrCodeScript: Canvas element is null');
+    return false;
+  }
+
+  // Check if canvas is properly attached to DOM
+  if (!canvas.parentNode) {
+    console.error('❌ QrCodeScript: Canvas is not attached to DOM');
+    return false;
+  }
+
+  // Get canvas context to verify it's functional
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    console.error('❌ QrCodeScript: Cannot get 2D context from canvas');
+    return false;
+  }
+
+  console.log('✅ QrCodeScript: Canvas is ready for rendering');
+  console.log('📊 QrCodeScript: Canvas dimensions:', canvas.width, 'x', canvas.height);
+  console.log('🎨 QrCodeScript: Canvas context:', ctx);
+
+  return true;
+}
+
+// Generate QR code on canvas with enhanced verification
+async function generateQRCode(canvas: HTMLCanvasElement, url: string, size: number = 512): Promise<boolean> {
+  console.log('🔄 QrCodeScript: generateQRCode called');
+  console.log('📝 QrCodeScript: URL:', url);
+  console.log('📏 QrCodeScript: Size:', size);
+  console.log('🎨 QrCodeScript: Canvas element:', canvas);
+
+  if (!url || url.trim() === '') {
+    console.error('❌ QrCodeScript: No URL provided');
+    return false;
+  }
+
+  // Verify canvas readiness
+  if (!verifyCanvasReadiness(canvas)) {
+    console.error('❌ QrCodeScript: Canvas verification failed');
+    return false;
+  }
+
+  // Ensure QRCode library is loaded
+  const libraryLoaded = await loadQRCodeLibrary();
+  if (!libraryLoaded) {
+    console.error('❌ QrCodeScript: QRCode library not available');
+    return false;
+  }
+
+  try {
+    console.log('🎨 QrCodeScript: Setting canvas dimensions...');
+
+    // Store original canvas properties for debugging
+    const originalWidth = canvas.width;
+    const originalHeight = canvas.height;
+
+    canvas.width = size;
+    canvas.height = size;
+
+    console.log(`📐 QrCodeScript: Canvas dimensions changed from ${originalWidth}x${originalHeight} to ${canvas.width}x${canvas.height}`);
+
+    // Clear canvas before generating QR code
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      console.log('🧹 QrCodeScript: Canvas cleared');
+    }
+
+    console.log('🎯 QrCodeScript: Generating QR code...');
+    await QRCode.toCanvas(canvas, url, {
+      width: size,
+      margin: 2,
+      color: {
+        dark: '#000000',
+        light: '#ffffff'
+      }
+    });
+
+    // Verify QR code was actually drawn
+    if (ctx) {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const hasContent = imageData.data.some(pixel => pixel !== 255); // Check for non-white pixels
+
+      if (hasContent) {
+        console.log('✅ QrCodeScript: QR code generated successfully - canvas has content');
+      } else {
+        console.warn('⚠️ QrCodeScript: QR code generated but canvas appears empty');
+      }
+    }
+
+    return true;
+  } catch (error) {
+    console.error('❌ QrCodeScript: Error generating QR code:', error);
+    return false;
+  }
+}
+
+// Copy QR code to clipboard
+async function copyQRCode(canvas: HTMLCanvasElement): Promise<boolean> {
+  console.log('📋 QrCodeScript: copyQRCode called');
+
+  if (!canvas) {
+    console.error('❌ QrCodeScript: Canvas not found for copying');
+    return false;
+  }
+
+  try {
+    console.log('🔄 QrCodeScript: Converting canvas to blob...');
+
+    return new Promise((resolve) => {
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          try {
+            console.log('📋 QrCodeScript: Writing to clipboard...');
+            const item = new ClipboardItem({ 'image/png': blob });
+            await navigator.clipboard.write([item]);
+            console.log('✅ QrCodeScript: QR code copied to clipboard successfully');
+            resolve(true);
+          } catch (error) {
+            console.error('❌ QrCodeScript: Failed to copy to clipboard:', error);
+            resolve(false);
+          }
+        } else {
+          console.error('❌ QrCodeScript: Failed to create blob from canvas');
+          resolve(false);
+        }
+      }, 'image/png');
+    });
+  } catch (error) {
+    console.error('❌ QrCodeScript: Error in copyQRCode:', error);
+    return false;
+  }
+}
+
+// Download QR code as image
+function downloadQRCode(canvas: HTMLCanvasElement, filename: string = `qr-code-${Date.now()}.png`): boolean {
+  console.log('💾 QrCodeScript: downloadQRCode called');
+  console.log('📁 QrCodeScript: Filename:', filename);
+
+  if (!canvas) {
+    console.error('❌ QrCodeScript: Canvas not found for download');
+    return false;
+  }
+
+  try {
+    console.log('🔄 QrCodeScript: Creating download link...');
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    console.log('✅ QrCodeScript: QR code download initiated successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ QrCodeScript: Error downloading QR code:', error);
+    return false;
+  }
+}
+
+// Auto-generate QR code on page load if default URL exists
+async function autoGenerateQRCode() {
+  console.log('🔄 QrCodeScript: Checking for auto-generation...');
+  console.log('🕐 QrCodeScript: Document readyState:', document.readyState);
+
+  // Ensure we're fully client-side and DOM is ready
+  const waitForElements = () => {
+    return new Promise<void>((resolve) => {
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds max wait
+
+      const checkElements = () => {
+        attempts++;
+        console.log(`🔍 QrCodeScript: Auto-generation attempt ${attempts}/${maxAttempts}`);
+
+        const urlInput = document.getElementById('qr-url') as HTMLInputElement;
+        const sizeSelect = document.getElementById('qr-size') as HTMLSelectElement;
+        const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+
+        console.log('🔍 QrCodeScript: Auto-generation DOM elements check:');
+        console.log('  - URL Input:', urlInput);
+        console.log('  - Size Select:', sizeSelect);
+        console.log('  - Canvas:', canvas);
+
+        if (urlInput && canvas && urlInput.value.trim()) {
+          console.log('✅ QrCodeScript: All elements found, proceeding with auto-generation');
+          resolve();
+        } else if (attempts >= maxAttempts) {
+          console.log('⏰ QrCodeScript: Max attempts reached, skipping auto-generation');
+          resolve();
+        } else {
+          console.log(`⏳ QrCodeScript: Elements not ready, retrying in 100ms...`);
+          setTimeout(checkElements, 100);
+        }
+      };
+
+      checkElements();
+    });
+  };
+
+  await waitForElements();
+
+  const urlInput = document.getElementById('qr-url') as HTMLInputElement;
+  const sizeSelect = document.getElementById('qr-size') as HTMLSelectElement;
+  const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+
+  if (urlInput && canvas && urlInput.value.trim()) {
+    const url = urlInput.value.trim();
+    const size = sizeSelect ? parseInt(sizeSelect.value) : 512;
+
+    console.log('🚀 QrCodeScript: Auto-generating QR code');
+    console.log('  - URL:', url);
+    console.log('  - Size:', size);
+
+    const success = await generateQRCode(canvas, url, size);
+    if (success) {
+      console.log('✅ QrCodeScript: Auto-generation completed successfully');
+    } else {
+      console.log('❌ QrCodeScript: Auto-generation failed');
+    }
+  } else {
+    console.log('ℹ️ QrCodeScript: No auto-generation needed (missing elements or URL)');
+  }
+}
+
+// Global event listeners
+document.addEventListener('qr-generate', async (event: any) => {
+  console.log('🎧 QrCodeScript: Received qr-generate event');
+  console.log('📦 QrCodeScript: Event detail:', event.detail);
+
+  const { url, size } = event.detail;
+  const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+
+  if (canvas) {
+    const success = await generateQRCode(canvas, url, size);
+    console.log(success ? '✅ QrCodeScript: Event-triggered generation successful' : '❌ QrCodeScript: Event-triggered generation failed');
+  } else {
+    console.error('❌ QrCodeScript: Canvas not found for event-triggered generation');
+  }
+});
+
+document.addEventListener('qr-copy', async () => {
+  console.log('🎧 QrCodeScript: Received qr-copy event');
+  const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+
+  if (canvas) {
+    const success = await copyQRCode(canvas);
+    console.log(success ? '✅ QrCodeScript: Copy operation successful' : '❌ QrCodeScript: Copy operation failed');
+  } else {
+    console.error('❌ QrCodeScript: Canvas not found for copy operation');
+  }
+});
+
+document.addEventListener('qr-download', () => {
+  console.log('🎧 QrCodeScript: Received qr-download event');
+  const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+
+  if (canvas) {
+    const success = downloadQRCode(canvas);
+    console.log(success ? '✅ QrCodeScript: Download operation successful' : '❌ QrCodeScript: Download operation failed');
+  } else {
+    console.error('❌ QrCodeScript: Canvas not found for download operation');
+  }
+});
+
+// Client-side initialization with hydration verification
+function initializeQRCodeScript() {
+  console.log('🎯 QrCodeScript: Client-side initialization starting...');
+  console.log('🌐 QrCodeScript: Window available:', typeof window !== 'undefined');
+  console.log('📄 QrCodeScript: Document available:', typeof document !== 'undefined');
+  console.log('🕐 QrCodeScript: Document readyState:', document.readyState);
+
+  // Ensure we're running client-side
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    console.error('❌ QrCodeScript: Running in non-browser environment, skipping initialization');
+    return;
+  }
+
+  console.log('✅ QrCodeScript: Browser environment confirmed, proceeding with initialization');
+
+  // Initialize auto-generation with proper timing
+  if (document.readyState === 'loading') {
+    console.log('⏳ QrCodeScript: Document still loading, waiting for DOMContentLoaded...');
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🎯 QrCodeScript: DOMContentLoaded fired, initializing...');
+      setTimeout(() => autoGenerateQRCode(), 50); // Small delay to ensure hydration
+    });
+  } else {
+    console.log('🎯 QrCodeScript: DOM already loaded, initializing with delay...');
+    setTimeout(() => autoGenerateQRCode(), 100); // Delay to ensure component hydration
+  }
+}
+
+// Start initialization
+initializeQRCodeScript();
+
+console.log('✅ QrCodeScript: Component script initialization complete');
+</script>

@@ -52,18 +52,37 @@ const { defaultUrl = "" } = Astro.props;
 </div>
 
 <script>
+  console.log('🎛️ QrCodeControls: Component script loaded');
+
   const urlInput = document.getElementById('qr-url') as HTMLInputElement;
   const sizeSelect = document.getElementById('qr-size') as HTMLSelectElement;
   const generateBtn = document.getElementById('qr-generate-btn') as HTMLButtonElement;
 
+  console.log('🔍 QrCodeControls: DOM elements check:');
+  console.log('  - URL Input:', urlInput);
+  console.log('  - Size Select:', sizeSelect);
+  console.log('  - Generate Button:', generateBtn);
+
   generateBtn?.addEventListener('click', () => {
+    console.log('🔘 QrCodeControls: Generate button clicked');
+
     const url = urlInput.value.trim();
     const size = parseInt(sizeSelect.value);
 
+    console.log('📝 QrCodeControls: Form values:');
+    console.log('  - URL:', url);
+    console.log('  - Size:', size);
+
     if (url) {
+      console.log('✅ QrCodeControls: Dispatching qr-generate event');
       document.dispatchEvent(new CustomEvent('qr-generate', {
         detail: { url, size }
       }));
+      console.log('📡 QrCodeControls: Event dispatched successfully');
+    } else {
+      console.log('❌ QrCodeControls: No URL provided, skipping event dispatch');
     }
   });
+
+  console.log('✅ QrCodeControls: Event listeners attached');
 </script>

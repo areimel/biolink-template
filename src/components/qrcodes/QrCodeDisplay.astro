@@ -46,24 +46,30 @@ const { canvasWidth = 300, canvasHeight = 300 } = Astro.props;
 </div>
 
 <script>
-  import { generateQRCode, copyQRCode, downloadQRCode } from '~/utils/qrcode';
+  console.log('🎨 QrCodeDisplay: Component script loaded');
 
   const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
   const copyBtn = document.getElementById('copy-qr-btn') as HTMLButtonElement;
   const downloadBtn = document.getElementById('download-qr-btn') as HTMLButtonElement;
 
-  document.addEventListener('qr-generate', async (event: CustomEvent) => {
-    const { url, size } = event.detail;
-    await generateQRCode(canvas, url, size);
-  });
+  console.log('🔍 QrCodeDisplay: DOM elements check:');
+  console.log('  - Canvas:', canvas);
+  console.log('  - Copy Button:', copyBtn);
+  console.log('  - Download Button:', downloadBtn);
 
+  // Copy button event handler
   copyBtn?.addEventListener('click', async () => {
-    await copyQRCode(canvas);
+    console.log('📋 QrCodeDisplay: Copy button clicked');
+    document.dispatchEvent(new CustomEvent('qr-copy'));
   });
 
+  // Download button event handler
   downloadBtn?.addEventListener('click', () => {
-    downloadQRCode(canvas);
+    console.log('💾 QrCodeDisplay: Download button clicked');
+    document.dispatchEvent(new CustomEvent('qr-download'));
   });
+
+  console.log('✅ QrCodeDisplay: Event listeners attached');
 </script>
 
 <style>

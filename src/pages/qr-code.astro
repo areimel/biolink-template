@@ -3,6 +3,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import LocalDevMenu from '~/components/biolink/LocalDevMenu.astro';
 import QrCodeControls from '~/components/qrcodes/QrCodeControls.astro';
 import QrCodeDisplay from '~/components/qrcodes/QrCodeDisplay.astro';
+import QrCodeScript from '~/components/qrcodes/QrCodeScript.astro';
 
 // Import data from JSON file
 import bioLinkData from '../data/biolink.json';
@@ -93,4 +94,7 @@ const metadata = {
 
   <!-- Development-only floating menu -->
   <LocalDevMenu />
+
+  <!-- QR Code JavaScript functionality - Client-side only -->
+  <QrCodeScript/>
 </Layout>
