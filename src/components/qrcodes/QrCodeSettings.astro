@@ -1,0 +1,124 @@
+---
+interface Props {
+  qrSettings: {
+    qrCode: {
+      size: number;
+      dotsColor: string;
+      dotsStyle: string;
+      backgroundColor: string;
+      logoImage: string;
+    };
+    pageSettings: {
+      title: string;
+      description: string;
+      showControls: boolean;
+      showPreview: boolean;
+    };
+    availableStyles: {
+      dotStyles: string[];
+      presetThemes: Array<{
+        name: string;
+        dotsColor: string;
+        backgroundColor: string;
+        description: string;
+      }>;
+    };
+    imageOptions: {
+      margin: number;
+      hideBackgroundDots: boolean;
+      crossOrigin: string;
+    };
+  };
+}
+
+const { qrSettings } = Astro.props;
+---
+
+<div class="space-y-4">
+  <!-- Current Settings -->
+  <div class="border-l-4 border-theme-accent pl-4">
+    <h3 class="text-lg font-bold font-heading mb-2" style="color: var(--biolink-accent-text-color);">
+      Current Settings
+    </h3>
+    <div class="space-y-1 text-sm font-mono">
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">Size:</span> {qrSettings.qrCode.size}px
+      </p>
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">Dots Color:</span> {qrSettings.qrCode.dotsColor}
+      </p>
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">Dots Style:</span> {qrSettings.qrCode.dotsStyle}
+      </p>
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">Background:</span> {qrSettings.qrCode.backgroundColor}
+      </p>
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">Logo:</span> {qrSettings.qrCode.logoImage ? 'Enabled' : 'None'}
+      </p>
+    </div>
+  </div>
+
+  <!-- Available Dot Styles -->
+  <div class="border-l-4 border-theme-accent pl-4">
+    <h3 class="text-lg font-bold font-heading mb-2" style="color: var(--biolink-accent-text-color);">
+      Available Styles
+    </h3>
+    <div class="text-sm font-mono space-y-1">
+      {qrSettings.availableStyles.dotStyles.map((style) => (
+        <p
+          class={`${style === qrSettings.qrCode.dotsStyle ? 'font-bold' : ''}`}
+          style="color: var(--biolink-body-text-color);"
+        >
+          {style === qrSettings.qrCode.dotsStyle ? '→ ' : '  '}{style}
+        </p>
+      ))}
+    </div>
+  </div>
+
+  <!-- Preset Themes -->
+  <div class="border-l-4 border-theme-accent pl-4">
+    <h3 class="text-lg font-bold font-heading mb-2" style="color: var(--biolink-accent-text-color);">
+      Preset Themes
+    </h3>
+    <div class="space-y-2 text-xs">
+      {qrSettings.availableStyles.presetThemes.map((theme) => {
+        const isCurrentTheme = theme.dotsColor === qrSettings.qrCode.dotsColor &&
+                              theme.backgroundColor === qrSettings.qrCode.backgroundColor;
+        return (
+          <div class={`p-2 rounded border ${isCurrentTheme ? 'border-theme-accent' : 'border-theme-text border-opacity-20'}`}>
+            <p class="font-bold font-mono mb-1" style="color: var(--biolink-accent-text-color);">
+              {isCurrentTheme ? '→ ' : ''}{theme.name}
+            </p>
+            <p class="text-xs mb-1" style="color: var(--biolink-muted-text-color);">
+              {theme.description}
+            </p>
+            <div class="flex gap-2 text-xs font-mono">
+              <span style="color: var(--biolink-body-text-color);">{theme.dotsColor}</span>
+              <span style="color: var(--biolink-muted-text-color);">on</span>
+              <span style="color: var(--biolink-body-text-color);">{theme.backgroundColor}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- Image Options -->
+  <div class="border-l-4 border-theme-accent pl-4">
+    <h3 class="text-lg font-bold font-heading mb-2" style="color: var(--biolink-accent-text-color);">
+      Image Options
+    </h3>
+    <div class="space-y-1 text-sm font-mono">
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">Margin:</span> {qrSettings.imageOptions.margin}px
+      </p>
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">Hide Dots:</span> {qrSettings.imageOptions.hideBackgroundDots ? 'Yes' : 'No'}
+      </p>
+      <p style="color: var(--biolink-body-text-color);">
+        <span class="font-semibold">CORS:</span> {qrSettings.imageOptions.crossOrigin}
+      </p>
+    </div>
+  </div>
+</div>

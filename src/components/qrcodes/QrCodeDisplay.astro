@@ -1,16 +1,31 @@
 ---
 interface Props {
   url: string;
-  size: number;
+  size?: number;
+  dotsColor?: string;
+  dotsStyle?: string;
+  backgroundColor?: string;
+  logoImage?: string;
 }
 
-const { url, size } = Astro.props;
+const {
+  url,
+  size = 300,
+  dotsColor = "#000000",
+  dotsStyle = "rounded",
+  backgroundColor = "#ffffff",
+  logoImage
+} = Astro.props;
 ---
 
 <div
   id="qr-code-container"
   data-url={url}
   data-size={size}
+  data-dots-color={dotsColor}
+  data-dots-style={dotsStyle}
+  data-background-color={backgroundColor}
+  data-logo-image={logoImage}
   class="flex justify-center"
 >
 </div>
@@ -21,22 +36,37 @@ const { url, size } = Astro.props;
   const container = document.getElementById('qr-code-container');
   const url = container?.getAttribute('data-url') || '';
   const size = parseInt(container?.getAttribute('data-size') || '300');
+  const dotsColor = container?.getAttribute('data-dots-color') || '#000000';
+  const dotsStyle = container?.getAttribute('data-dots-style') || 'rounded';
+  const backgroundColor = container?.getAttribute('data-background-color') || '#ffffff';
+  const logoImage = container?.getAttribute('data-logo-image');
 
   if (container && url) {
-    const qrCode = new QRCodeStyling({
+    const qrCodeConfig: any = {
       width: size,
       height: size,
-      type: 'svg',
+      type: 'png',
       data: url,
       dotsOptions: {
-        color: '#000000',
-        type: 'rounded'
+        color: dotsColor,
+        type: dotsStyle
       },
       backgroundOptions: {
-        color: '#ffffff'
+        color: backgroundColor
       }
-    });
+    };
 
+    // Add logo configuration if logoImage is provided
+    if (logoImage && logoImage !== 'undefined') {
+      qrCodeConfig.image = logoImage;
+      qrCodeConfig.imageOptions = {
+        crossOrigin: 'anonymous',
+        margin: 20,
+        hideBackgroundDots: true
+      };
+    }
+
+    const qrCode = new QRCodeStyling(qrCodeConfig);
     qrCode.append(container);
   }
 </script>

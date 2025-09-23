@@ -2,12 +2,16 @@
 import Layout from '~/layouts/PageLayout.astro';
 import LocalDevMenu from '~/components/biolink/LocalDevMenu.astro';
 import QRCodeDisplay from '~/components/qrcodes/QRCodeDisplay.astro';
-// Import data from JSON file
-import bioLinkData from '../data/biolink.json';
+import QrCodeSettings from '~/components/qrcodes/QrCodeSettings.astro';
+import fs from 'node:fs';
+import yaml from 'js-yaml';
+// Import data from JSON and YAML files
+import bioLinkData from '~/data/biolink.json';
+const qrSettings = yaml.load(fs.readFileSync('./src/data/qr-code-settings.yaml', 'utf8'));
 
 const metadata = {
-  title: 'QR Code Generator',
-  description: 'Generate QR codes for your biolink profile and share them easily across platforms.',
+  title: qrSettings.pageSettings.title,
+  description: qrSettings.pageSettings.description,
   ignoreTitleTemplate: true,
 };
 ---
@@ -22,10 +26,10 @@ const metadata = {
         <!-- Page Header -->
         <div class="flex flex-col items-center text-center px-4 pb-6 pt-6 neo-container">
           <h1 class="text-3xl font-bold font-heading leading-relaxed mb-2" style="color: var(--biolink-body-text-color)">
-            QR Code Generator
+            {qrSettings.pageSettings.title}
           </h1>
           <p class="text-sm font-mono font-semibold tracking-tight max-w-sm mx-auto" style="color: var(--biolink-muted-text-color); text-wrap: balance;">
-            Generate and customize QR codes for your biolink profile
+            {qrSettings.pageSettings.description}
           </p>
         </div>
 
@@ -34,7 +38,7 @@ const metadata = {
           <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
             QR Code Settings
           </h2>
-          
+          <QrCodeSettings qrSettings={qrSettings} />
         </div>
 
         <!-- QR Preview Section - Mobile -->
@@ -52,10 +56,10 @@ const metadata = {
         <div class="lg:col-span-3 mb-6">
           <div class="flex flex-col items-center text-center px-4 pb-6 pt-6 neo-container">
             <h1 class="text-4xl font-bold font-heading leading-relaxed mb-2" style="color: var(--biolink-body-text-color)">
-              QR Code Generator
+              {qrSettings.pageSettings.title}
             </h1>
             <p class="text-base font-mono font-semibold tracking-tight max-w-md mx-auto" style="color: var(--biolink-muted-text-color); text-wrap: balance;">
-              Generate and customize QR codes for your biolink profile
+              {qrSettings.pageSettings.description}
             </p>
           </div>
         </div>
@@ -66,7 +70,7 @@ const metadata = {
             <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
               QR Code Settings
             </h2>
-            
+            <QrCodeSettings qrSettings={qrSettings} />
           </div>
         </div>
 
@@ -76,9 +80,13 @@ const metadata = {
             <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
               QR Code Preview
             </h2>
-            <QRCodeDisplay 
-              url={bioLinkData.liveUrl} 
-              size={500}
+            <QRCodeDisplay
+              url={bioLinkData.liveUrl}
+              size={qrSettings.qrCode.size}
+              dotsColor={qrSettings.qrCode.dotsColor}
+              dotsStyle={qrSettings.qrCode.dotsStyle}
+              backgroundColor={qrSettings.qrCode.backgroundColor}
+              logoImage={qrSettings.qrCode.logoImage}
             />
           </div>
         </div>

@@ -1,0 +1,104 @@
+# QR Code Configuration
+# This file controls the appearance and behavior of QR codes generated on the QR code page.
+# Uses the qr-code-styling library for advanced customization options.
+
+# Core QR Code Appearance Settings
+qrCode:
+  # Size of the QR code in pixels (recommended: 300-800px for web display)
+  size: 500
+
+  # Color of the QR code dots/squares (hex color codes)
+  # Examples: "#000000" (black), "#4267b2" (Facebook blue), "#00ff00" (retro green)
+  dotsColor: "#000000"
+
+  # Style of the QR code dots - affects the visual appearance
+  # Available options: "rounded", "dots", "classy", "classy-rounded", "square", "extra-rounded"
+  # - "rounded": Soft rounded corners, modern look
+  # - "dots": Perfect circles, clean minimal style
+  # - "classy": Slight bevels, professional appearance
+  # - "classy-rounded": Combines classy with rounded corners
+  # - "square": Sharp edges, classic QR code look
+  # - "extra-rounded": Very round corners, friendly feel
+  dotsStyle: "square"
+
+  # Background color behind the QR code (hex color codes)
+  # Should contrast well with dotsColor for optimal scanning
+  backgroundColor: "#FFFFFF"
+
+  # Optional logo/image to embed in center of QR code
+  # Leave empty ("") for no logo, or provide image URL/path
+  # Note: Large logos may interfere with QR code scanning
+  logoImage: ""
+
+# Page Display Settings
+# Controls how the QR code generator page appears and behaves
+pageSettings:
+  # Main heading displayed on the QR code generator page
+  title: "QR Code Generator"
+
+  # Subtitle/description text shown below the title
+  description: "Generate and customize QR codes for your biolink profile"
+
+  # Feature toggles for future functionality (currently unused)
+  showControls: true   # Whether to show editing controls
+  showPreview: true    # Whether to show QR code preview
+
+# Available Customization Options
+# These define what options are available for users to choose from
+availableStyles:
+  # All supported dot/square styles from qr-code-styling library
+  dotStyles:
+    - "rounded"        # Modern, friendly appearance
+    - "dots"           # Minimalist circular dots
+    - "classy"         # Professional with subtle bevels
+    - "classy-rounded" # Professional + rounded corners
+    - "square"         # Classic QR code look
+    - "extra-rounded"  # Very soft, approachable feel
+
+  # Pre-configured color themes for quick selection
+  # Each theme includes coordinated colors and description
+  presetThemes:
+    # Standard black-on-white for maximum compatibility
+    - name: "Default"
+      dotsColor: "#000000"
+      backgroundColor: "#ffffff"
+      description: "Classic black on white"
+
+    # Facebook brand colors for social media integration
+    - name: "Facebook Blue"
+      dotsColor: "#4267b2"
+      backgroundColor: "#e9ebee"
+      description: "Facebook brand colors"
+
+    # GitHub dark theme for developer/tech aesthetic
+    - name: "GitHub Dark"
+      dotsColor: "#f0f6fc"
+      backgroundColor: "#0d1117"
+      description: "GitHub dark theme"
+
+    # Retro terminal colors for nostalgic/tech vibe
+    - name: "Retro Green"
+      dotsColor: "#00ff00"
+      backgroundColor: "#000000"
+      description: "Retro terminal colors"
+
+    # Ocean-inspired colors for calming, professional look
+    - name: "Ocean Blue"
+      dotsColor: "#0066cc"
+      backgroundColor: "#f0f8ff"
+      description: "Ocean inspired blue theme"
+
+# Logo/Image Configuration Options
+# Controls how embedded logos are handled in QR codes
+imageOptions:
+  # Margin around the logo in pixels (prevents dot overlap)
+  # Higher values = more space around logo, but larger logo area
+  margin: 20
+
+  # Whether to hide QR dots behind the logo image
+  # true = cleaner look, false = dots may show through logo
+  hideBackgroundDots: true
+
+  # CORS policy for loading external logo images
+  # "anonymous" allows cross-origin images with proper headers
+  crossOrigin: "anonymous"
