@@ -9,6 +9,20 @@ import yaml from 'js-yaml';
 import bioLinkData from '~/data/biolink.json';
 const qrSettings = yaml.load(fs.readFileSync('./src/data/qr-code-settings.yaml', 'utf8'));
 
+// Preset theme resolution logic
+// Find matching preset theme by name, or use manual settings if preset is "false" or invalid
+const selectedPreset = qrSettings.qrCode.preset !== "false" && qrSettings.qrCode.preset
+  ? qrSettings.availableStyles.presetThemes.find(theme => theme.name === qrSettings.qrCode.preset)
+  : null;
+
+// Apply preset colors, dotsStyle, and corner options if found, otherwise use manual settings
+// Size and logoImage always use manual settings regardless of preset
+const finalDotsColor = selectedPreset ? selectedPreset.dotsColor : qrSettings.qrCode.dotsColor;
+const finalBackgroundColor = selectedPreset ? selectedPreset.backgroundColor : qrSettings.qrCode.backgroundColor;
+const finalDotsStyle = selectedPreset ? selectedPreset.dotsStyle : qrSettings.qrCode.dotsStyle;
+const finalCornerSquareOptions = selectedPreset ? selectedPreset.cornerSquareOptions : qrSettings.qrCode.cornerSquareOptions;
+const finalCornerDotOptions = selectedPreset ? selectedPreset.cornerDotOptions : qrSettings.qrCode.cornerDotOptions;
+
 const metadata = {
   title: qrSettings.pageSettings.title,
   description: qrSettings.pageSettings.description,
@@ -83,10 +97,13 @@ const metadata = {
             <QRCodeDisplay
               url={bioLinkData.liveUrl}
               size={qrSettings.qrCode.size}
-              dotsColor={qrSettings.qrCode.dotsColor}
-              dotsStyle={qrSettings.qrCode.dotsStyle}
-              backgroundColor={qrSettings.qrCode.backgroundColor}
+              dotsColor={finalDotsColor}
+              dotsStyle={finalDotsStyle}
+              backgroundColor={finalBackgroundColor}
               logoImage={qrSettings.qrCode.logoImage}
+              cornerSquareOptions={finalCornerSquareOptions}
+              cornerDotOptions={finalCornerDotOptions}
+              defaultDownloadFormat={qrSettings.qrCode.defaultDownloadFormat}
             />
           </div>
         </div>
