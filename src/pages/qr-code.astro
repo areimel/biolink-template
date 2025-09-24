@@ -9,19 +9,18 @@ import yaml from 'js-yaml';
 import bioLinkData from '~/data/biolink.json';
 const qrSettings = yaml.load(fs.readFileSync('./src/data/qr-code-settings.yaml', 'utf8'));
 
-// Preset theme resolution logic
-// Find matching preset theme by name, or use manual settings if preset is "false" or invalid
+// Preset theme resolution with override support
+// Find matching preset theme by name, or use defaults if preset is "false" or invalid
 const selectedPreset = qrSettings.qrCode.preset !== "false" && qrSettings.qrCode.preset
   ? qrSettings.availableStyles.presetThemes.find(theme => theme.name === qrSettings.qrCode.preset)
   : null;
 
-// Apply preset colors, dotsStyle, and corner options if found, otherwise use manual settings
-// Size and logoImage always use manual settings regardless of preset
-const finalDotsColor = selectedPreset ? selectedPreset.dotsColor : qrSettings.qrCode.dotsColor;
-const finalBackgroundColor = selectedPreset ? selectedPreset.backgroundColor : qrSettings.qrCode.backgroundColor;
-const finalDotsStyle = selectedPreset ? selectedPreset.dotsStyle : qrSettings.qrCode.dotsStyle;
-const finalCornerSquareOptions = selectedPreset ? selectedPreset.cornerSquareOptions : qrSettings.qrCode.cornerSquareOptions;
-const finalCornerDotOptions = selectedPreset ? selectedPreset.cornerDotOptions : qrSettings.qrCode.cornerDotOptions;
+// Override system: manual overrides → preset values → hardcoded defaults
+const finalDotsColor = qrSettings.qrCode.dotsColor ?? selectedPreset?.dotsColor ?? '#000000';
+const finalBackgroundColor = qrSettings.qrCode.backgroundColor ?? selectedPreset?.backgroundColor ?? '#ffffff';
+const finalDotsStyle = qrSettings.qrCode.dotsStyle ?? selectedPreset?.dotsStyle ?? 'square';
+const finalCornerSquareOptions = qrSettings.qrCode.cornerSquareOptions ?? selectedPreset?.cornerSquareOptions ?? { color: '#000000', type: 'square' };
+const finalCornerDotOptions = qrSettings.qrCode.cornerDotOptions ?? selectedPreset?.cornerDotOptions ?? { color: '#000000', type: 'square' };
 
 const metadata = {
   title: qrSettings.pageSettings.title,
@@ -52,7 +51,18 @@ const metadata = {
           <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
             QR Code Settings
           </h2>
-          <QrCodeSettings qrSettings={qrSettings} />
+          <p>Edit settings in `src\data\qr-code-settings.yaml`</p>
+          <QrCodeSettings
+            qrSettings={qrSettings}
+            resolvedValues={{
+              preset: qrSettings.qrCode.preset,
+              dotsColor: finalDotsColor,
+              backgroundColor: finalBackgroundColor,
+              dotsStyle: finalDotsStyle,
+              cornerSquareOptions: finalCornerSquareOptions,
+              cornerDotOptions: finalCornerDotOptions
+            }}
+          />
         </div>
 
         <!-- QR Preview Section - Mobile -->
@@ -84,7 +94,19 @@ const metadata = {
             <h2 class="text-xl font-bold font-heading mb-4 tracking-tight text-center" style="color: var(--biolink-accent-text-color);">
               QR Code Settings
             </h2>
-            <QrCodeSettings qrSettings={qrSettings} />
+            <p class="text-sm font-mono font-semibold tracking-tight" style="color: var(--biolink-muted-text-color);">
+              Edit settings in <code>src\data\qr-code-settings.yaml</code>
+            <QrCodeSettings
+            qrSettings={qrSettings}
+            resolvedValues={{
+              preset: qrSettings.qrCode.preset,
+              dotsColor: finalDotsColor,
+              backgroundColor: finalBackgroundColor,
+              dotsStyle: finalDotsStyle,
+              cornerSquareOptions: finalCornerSquareOptions,
+              cornerDotOptions: finalCornerDotOptions
+            }}
+          />
           </div>
         </div>
 
