@@ -2,6 +2,7 @@
 interface Props {
   url: string;
   size?: number;
+  margin?: number;
   dotsColor?: string;
   dotsStyle?: string;
   backgroundColor?: string;
@@ -20,6 +21,7 @@ interface Props {
 const {
   url,
   size = 300,
+  margin = 10,
   dotsColor = "#000000",
   dotsStyle = "rounded",
   backgroundColor = "#ffffff",
@@ -35,6 +37,7 @@ const {
     id="qr-code-container"
     data-url={url}
     data-size={size}
+    data-margin={margin}
     data-dots-color={dotsColor}
     data-dots-style={dotsStyle}
     data-background-color={backgroundColor}
@@ -75,6 +78,7 @@ const {
   const container = document.getElementById('qr-code-container');
   const url = container?.getAttribute('data-url') || '';
   const size = parseInt(container?.getAttribute('data-size') || '300');
+  const margin = parseInt(container?.getAttribute('data-margin') || '10');
   const dotsColor = container?.getAttribute('data-dots-color') || '#000000';
   const dotsStyle = container?.getAttribute('data-dots-style') || 'rounded';
   const backgroundColor = container?.getAttribute('data-background-color') || '#ffffff';
@@ -88,6 +92,7 @@ const {
     const qrCodeConfig: any = {
       width: size,
       height: size,
+      margin: margin,
       type: 'svg',
       data: url,
       dotsOptions: {

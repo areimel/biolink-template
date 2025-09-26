@@ -6,11 +6,13 @@
 qrCode:
   preset: "Default"
   size: 500
-  logoImage: "/images/Logo_Group_v1.png"
+  margin: 10            # Margin around canvas
+  # logoImage: "/images/Logo_Group_v1.png"
+  logoImage: ""
   defaultDownloadFormat: "svg"
   # Optional overrides - uncomment and modify to customize preset values:
   # dotsColor: "#FF0000"           # Override preset's dots color
-  # backgroundColor: "#F0F0F0"     # Override preset's background color
+  backgroundColor: "#f47f21"     # Override preset's background color
   # dotsStyle: "rounded"           # Override preset's dots style
   # cornerSquareOptions:           # Override preset's corner square styling
   #   color: "#FF0000"
