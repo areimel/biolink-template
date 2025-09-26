@@ -1,0 +1,186 @@
+# QR Code Configuration
+# This file controls the appearance and behavior of QR codes generated on the QR code page.
+# Uses the qr-code-styling library for advanced customization options.
+
+# Core QR Code Settings - Preset First with Optional Overrides
+qrCode:
+  preset: "Default"
+  size: 500
+  margin: 10            # Margin around canvas
+  # logoImage: "/images/Logo_Group_v1.png"
+  logoImage: ""
+  defaultDownloadFormat: "svg"
+  # Optional overrides - uncomment and modify to customize preset values:
+  # dotsColor: "#FF0000"           # Override preset's dots color
+  backgroundColor: "#f47f21"     # Override preset's background color
+  # dotsStyle: "rounded"           # Override preset's dots style
+  # cornerSquareOptions:           # Override preset's corner square styling
+  #   color: "#FF0000"
+  #   type: "rounded"
+  # cornerDotOptions:              # Override preset's corner dot styling
+  #   color: "#FF0000"
+  #   type: "rounded"
+
+# Page Display Settings
+# Controls how the QR code generator page appears and behaves
+pageSettings:
+  # Main heading displayed on the QR code generator page
+  title: "QR Code Generator"
+
+  # Subtitle/description text shown below the title
+  description: "Generate and customize QR codes for your biolink profile"
+
+  # Feature toggles for future functionality (currently unused)
+  showControls: true   # Whether to show editing controls
+  showPreview: true    # Whether to show QR code preview
+
+# Available Customization Options
+# These define what options are available for users to choose from
+availableStyles:
+  # All supported dot/square styles from qr-code-styling library
+  dotStyles:
+    - "rounded"        # Modern, friendly appearance
+    - "dots"           # Minimalist circular dots
+    - "classy"         # Professional with subtle bevels
+    - "classy-rounded" # Professional + rounded corners
+    - "square"         # Classic QR code look
+    - "extra-rounded"  # Very soft, approachable feel
+
+  # Pre-configured color themes for quick selection
+  # Each theme includes coordinated colors, dot style, and description
+  presetThemes:
+    # Standard black-on-white for maximum compatibility
+    - name: "Default"
+      dotsColor: "#000000"
+      backgroundColor: "#ffffff"
+      dotsStyle: "square"
+      cornerSquareOptions:
+        color: "#000000"
+        type: "square"
+      cornerDotOptions:
+        color: "#000000"
+        type: "square"
+      description: "Classic black on white with sharp edges"
+
+    # Facebook brand colors for social media integration
+    - name: "Facebook Blue"
+      dotsColor: "#4267b2"
+      backgroundColor: "#e9ebee"
+      dotsStyle: "rounded"
+      cornerSquareOptions:
+        color: "#4267b2"
+        type: "rounded"
+      cornerDotOptions:
+        color: "#4267b2"
+        type: "rounded"
+      description: "Facebook brand colors with modern rounded style"
+
+    # GitHub dark theme for developer/tech aesthetic
+    - name: "GitHub Dark"
+      dotsColor: "#f0f6fc"
+      backgroundColor: "#0d1117"
+      dotsStyle: "classy"
+      cornerSquareOptions:
+        color: "#f0f6fc"
+        type: "classy"
+      cornerDotOptions:
+        color: "#f0f6fc"
+        type: "classy"
+      description: "GitHub dark theme with professional classy style"
+
+    # Retro terminal colors for nostalgic/tech vibe
+    - name: "Retro Green"
+      dotsColor: "#00ff00"
+      backgroundColor: "#000000"
+      dotsStyle: "dots"
+      cornerSquareOptions:
+        color: "#00ff00"
+        type: "dots"
+      cornerDotOptions:
+        color: "#00ff00"
+        type: "dots"
+      description: "Retro terminal colors with pixel-perfect dots"
+
+    # Ocean-inspired colors for calming, professional look
+    - name: "Ocean Blue"
+      dotsColor: "#0066cc"
+      backgroundColor: "#f0f8ff"
+      dotsStyle: "extra-rounded"
+      cornerSquareOptions:
+        color: "#0066cc"
+        type: "extra-rounded"
+      cornerDotOptions:
+        color: "#0066cc"
+        type: "extra-rounded"
+      description: "Ocean inspired blue theme with soft rounded style"
+
+# Logo/Image Configuration Options
+imageOptions:
+  margin: 2
+  hideBackgroundDots: true
+  crossOrigin: "anonymous"
+
+# ================================================================================
+# DETAILED CONFIGURATION REFERENCE
+# ================================================================================
+# This section provides comprehensive documentation for all QR code settings.
+# Refer to this section when customizing your QR code appearance.
+
+# PRESET THEMES:
+# Available preset options for qrCode.preset field:
+# - "Default": Classic black on white with sharp edges
+# - "Facebook Blue": Facebook brand colors with modern rounded style
+# - "GitHub Dark": GitHub dark theme with professional classy style
+# - "Retro Green": Retro terminal colors with pixel-perfect dots
+# - "Ocean Blue": Ocean inspired blue theme with soft rounded style
+# - "false" or invalid name: Use manual settings only
+
+# OVERRIDE SYSTEM:
+# Any field in the qrCode section (except preset) will override the preset value.
+# Example configurations:
+#
+# Preset only:
+# qrCode:
+#   preset: "Default"
+#   size: 500
+#
+# Preset with custom color override:
+# qrCode:
+#   preset: "Default"
+#   dotsColor: "#FF0000"    # Red dots instead of preset's black
+#   size: 500
+#
+# No preset (manual settings):
+# qrCode:
+#   preset: "false"
+#   dotsColor: "#000000"
+#   backgroundColor: "#FFFFFF"
+#   dotsStyle: "square"
+
+# FIELD DEFINITIONS:
+# size: QR code dimensions in pixels (recommended: 300-800px for web display)
+# dotsColor: Color of QR code dots/squares (hex color codes)
+#   Examples: "#000000" (black), "#4267b2" (Facebook blue), "#00ff00" (retro green)
+# dotsStyle: Visual style of QR code dots
+#   Options: "rounded", "dots", "classy", "classy-rounded", "square", "extra-rounded"
+#   - "rounded": Soft rounded corners, modern look
+#   - "dots": Perfect circles, clean minimal style
+#   - "classy": Slight bevels, professional appearance
+#   - "classy-rounded": Combines classy with rounded corners
+#   - "square": Sharp edges, classic QR code look
+#   - "extra-rounded": Very round corners, friendly feel
+# backgroundColor: Background color behind QR code (should contrast with dotsColor)
+# cornerSquareOptions: Styling for the three corner squares
+#   color: Color of corner squares (hex color code)
+#   type: Style of corner squares ("dot", "square", "extra-rounded", "rounded", "dots", "classy", "classy-rounded")
+# cornerDotOptions: Styling for dots inside corner squares
+#   color: Color of corner dots (hex color code)
+#   type: Style of corner dots ("dot", "square", "rounded", "dots", "classy", "classy-rounded", "extra-rounded")
+# logoImage: Optional logo/image to embed in center (URL/path or "" for none)
+#   Note: Large logos may interfere with QR code scanning
+# defaultDownloadFormat: Pre-selected format in download dropdown ("png", "jpeg", "svg")
+
+# IMAGE OPTIONS:
+# margin: Margin around logo in pixels (prevents dot overlap)
+# hideBackgroundDots: Whether to hide QR dots behind logo (true = cleaner look)
+# crossOrigin: CORS policy for external images ("anonymous" recommended)

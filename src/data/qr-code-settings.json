@@ -1,0 +1,62 @@
+{
+  "qrCode": {
+    "size": 500,
+    "dotsColor": "#000000",
+    "dotsStyle": "square",
+    "backgroundColor": "#FFFFFF",
+    "logoImage": ""
+  },
+  "pageSettings": {
+    "title": "QR Code Generator",
+    "description": "Generate and customize QR codes for your biolink profile",
+    "showControls": true,
+    "showPreview": true
+  },
+  "availableStyles": {
+    "dotStyles": [
+      "rounded",
+      "dots",
+      "classy",
+      "classy-rounded",
+      "square",
+      "extra-rounded"
+    ],
+    "presetThemes": [
+      {
+        "name": "Default",
+        "dotsColor": "#000000",
+        "backgroundColor": "#ffffff",
+        "description": "Classic black on white"
+      },
+      {
+        "name": "Facebook Blue",
+        "dotsColor": "#4267b2",
+        "backgroundColor": "#e9ebee",
+        "description": "Facebook brand colors"
+      },
+      {
+        "name": "GitHub Dark",
+        "dotsColor": "#f0f6fc",
+        "backgroundColor": "#0d1117",
+        "description": "GitHub dark theme"
+      },
+      {
+        "name": "Retro Green",
+        "dotsColor": "#00ff00",
+        "backgroundColor": "#000000",
+        "description": "Retro terminal colors"
+      },
+      {
+        "name": "Ocean Blue",
+        "dotsColor": "#0066cc",
+        "backgroundColor": "#f0f8ff",
+        "description": "Ocean inspired blue theme"
+      }
+    ]
+  },
+  "imageOptions": {
+    "margin": 20,
+    "hideBackgroundDots": true,
+    "crossOrigin": "anonymous"
+  }
+}

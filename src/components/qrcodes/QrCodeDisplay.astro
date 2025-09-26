@@ -1,0 +1,156 @@
+---
+interface Props {
+  url: string;
+  size?: number;
+  margin?: number;
+  dotsColor?: string;
+  dotsStyle?: string;
+  backgroundColor?: string;
+  logoImage?: string;
+  cornerSquareOptions?: {
+    color?: string;
+    type?: string;
+  };
+  cornerDotOptions?: {
+    color?: string;
+    type?: string;
+  };
+  defaultDownloadFormat?: string;
+}
+
+const {
+  url,
+  size = 300,
+  margin = 10,
+  dotsColor = "#000000",
+  dotsStyle = "rounded",
+  backgroundColor = "#ffffff",
+  logoImage,
+  cornerSquareOptions = { color: "#000000", type: "square" },
+  cornerDotOptions = { color: "#000000", type: "square" },
+  defaultDownloadFormat = "png"
+} = Astro.props;
+---
+
+<div class="flex flex-col items-center space-y-4">
+  <div
+    id="qr-code-container"
+    data-url={url}
+    data-size={size}
+    data-margin={margin}
+    data-dots-color={dotsColor}
+    data-dots-style={dotsStyle}
+    data-background-color={backgroundColor}
+    data-logo-image={logoImage}
+    data-corner-square-color={cornerSquareOptions.color}
+    data-corner-square-type={cornerSquareOptions.type}
+    data-corner-dot-color={cornerDotOptions.color}
+    data-corner-dot-type={cornerDotOptions.type}
+    class="flex justify-center"
+  >
+  </div>
+
+  <!-- Download Controls -->
+  <div class="flex items-center gap-3">
+    <button
+      id="download-button"
+      class="px-4 py-2 bg-theme-accent text-theme-bg font-bold font-mono text-sm border-2 border-theme-text hover:bg-theme-text hover:text-theme-accent transition-colors duration-200 neo-button"
+      style="background-color: var(--biolink-accent-color); color: var(--biolink-bg-color); border-color: var(--biolink-text-color);"
+    >
+      Download
+    </button>
+
+    <select
+      id="format-select"
+      class="px-3 py-2 bg-theme-bg text-theme-text font-mono text-sm border-2 border-theme-text cursor-pointer"
+      style="background-color: var(--biolink-bg-color); color: var(--biolink-text-color); border-color: var(--biolink-text-color);"
+    >
+      <option value="png" selected={defaultDownloadFormat === "png"}>PNG</option>
+      <option value="jpeg" selected={defaultDownloadFormat === "jpeg"}>JPEG</option>
+      <option value="svg" selected={defaultDownloadFormat === "svg"}>SVG</option>
+    </select>
+  </div>
+</div>
+
+<script>
+  import QRCodeStyling from 'qr-code-styling';
+
+  const container = document.getElementById('qr-code-container');
+  const url = container?.getAttribute('data-url') || '';
+  const size = parseInt(container?.getAttribute('data-size') || '300');
+  const margin = parseInt(container?.getAttribute('data-margin') || '10');
+  const dotsColor = container?.getAttribute('data-dots-color') || '#000000';
+  const dotsStyle = container?.getAttribute('data-dots-style') || 'rounded';
+  const backgroundColor = container?.getAttribute('data-background-color') || '#ffffff';
+  const logoImage = container?.getAttribute('data-logo-image');
+  const cornerSquareColor = container?.getAttribute('data-corner-square-color') || '#000000';
+  const cornerSquareType = container?.getAttribute('data-corner-square-type') || 'square';
+  const cornerDotColor = container?.getAttribute('data-corner-dot-color') || '#000000';
+  const cornerDotType = container?.getAttribute('data-corner-dot-type') || 'square';
+
+  if (container && url) {
+    const qrCodeConfig: any = {
+      width: size,
+      height: size,
+      margin: margin,
+      type: 'svg',
+      data: url,
+      dotsOptions: {
+        color: dotsColor,
+        type: dotsStyle
+      },
+      backgroundOptions: {
+        color: backgroundColor
+      },
+      cornersSquareOptions: {
+        color: cornerSquareColor,
+        type: cornerSquareType
+      },
+      cornersDotOptions: {
+        color: cornerDotColor,
+        type: cornerDotType
+      }
+    };
+
+    // Add logo configuration if logoImage is provided
+    if (logoImage && logoImage !== 'undefined') {
+      qrCodeConfig.image = logoImage;
+      qrCodeConfig.imageOptions = {
+        crossOrigin: 'anonymous',
+        margin: 2,
+        hideBackgroundDots: true
+      };
+    }
+
+    const qrCode = new QRCodeStyling(qrCodeConfig);
+    qrCode.append(container);
+
+    // Download functionality
+    const downloadButton = document.getElementById('download-button');
+    const formatSelect = document.getElementById('format-select') as HTMLSelectElement;
+
+    if (downloadButton && formatSelect) {
+      downloadButton.addEventListener('click', async () => {
+        try {
+          const selectedFormat = formatSelect.value as 'png' | 'jpeg' | 'svg';
+          console.log('Starting download with format:', selectedFormat);
+          console.log('QR Code object:', qrCode);
+
+          if (!qrCode) {
+            console.error('QR code object is not initialized');
+            return;
+          }
+
+          await qrCode.download({
+            name: 'qr-code',
+            extension: selectedFormat
+          });
+
+          console.log('Download completed successfully');
+        } catch (error) {
+          console.error('Download failed:', error);
+        }
+      });
+    }
+  }
+</script>

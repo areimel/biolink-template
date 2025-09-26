@@ -7,6 +7,7 @@ import ProjectsSection from '~/components/biolink/ProjectsSection.astro';
 import SupportSection from '~/components/biolink/SupportSection.astro';
 import PopupModal from '~/components/common/PopupModal.astro';
 import ContactForm from '~/components/biolink/ContactForm.astro';
+import LocalDevMenu from '~/components/biolink/LocalDevMenu.astro';
 
 // Import data from JSON file
 import bioLinkData from '../data/biolink.json';
@@ -78,4 +79,7 @@ const metadata = {
     <p>Anti-Copyright {new Date().getFullYear()} - No Rights Reserved</p>
     <p>Open Source & Free To Use - Download your own copy and customize it for yourself.</p>
   </div>
+
+  <!-- Development-only floating menu -->
+  <LocalDevMenu />
 </Layout>
